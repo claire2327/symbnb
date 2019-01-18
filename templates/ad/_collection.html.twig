@@ -1,0 +1,42 @@
+{% block _annonce_images_widget %}
+    {# ce bloc va permettre de définir l'affichage du champ ad_images #}
+    {{ form_widget(form) }}
+    {# ici form = ad_images #}
+
+    <input type="hidden" id="widgets-counter" value="0">
+    {# on crée un input caché avec une valeur de départ de 0 qui va compter le nombre d'entrées #}
+
+    <div class="form-group">
+        <button type="button" id="add-image" class="btn btn-primary">Ajouter une image</button>
+    </div>
+{% endblock %}
+
+{% block _annonce_images_entry_row %}
+    {{ form_widget(form) }}
+    {# du coup on n'appelle plus le label etc. On n'appelle que le widget. #}
+{% endblock %}
+
+
+{% block _annonce_images_entry_widget %}
+    {# entry = élément de la collection #}
+    <div class="form-group" id="block_{{ id }}">
+        <div class="row">
+            <div class="col-10">
+                <div class="row">
+                    <div class="col">
+                        {{ form_widget(form.url) }}
+                        {{ form_errors(form.url) }}
+                        {# form représente ici une entry (qui, ici, sont des ImageType #}
+                    </div>
+                    <div class="col">
+                        {{ form_widget(form.caption) }}
+                        {{ form_errors(form.caption) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <button button="" data-action="delete" data-target="#block_{{id}}" class="btn btn-danger">X</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

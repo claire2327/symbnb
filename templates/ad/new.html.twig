@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Création d'une annonce {% endblock %}
+
+{% form_theme form 'ad/_collection.html.twig' %}
+{# on met _self car le thème est défini dans ce fichier. Sinon on pourrait mettre l'url du fichier #}
+
+
+
+{% block body %}
+
+    <div class="container">
+        <h1>Créer une nouvelle annonce</h1>
+
+
+        {{ form_start(form) }}
+        {# début du formulaire form #}
+
+        {# {{ form_row(form) }} #}
+        {# comprends label, widget, erros... #}
+
+        {{ form_widget(form) }}
+        {# permet plus de flexibilité car du coup on peut ajouter des choses au début ou à la fin #}
+        {# form.title : on n'a que le champ title qui s'affiche avant le bouton mais le reste s'affiche après le bouton à cause du form(end)#}
+
+
+        <button type="submit" class="btn btn-primary">Créer la nouvelle annonce</button>
+
+        {{ form_end(form) }}
+        {# il ajoute automatiquement un jeton de sécurité #}
+
+        {# {{ form(form) }} #}
+        {# remplace tout #}
+
+
+    </div>
+
+{% endblock %}
+
+{# plutôt que de définir le thème soi-même, on va en prendre un dans la communauté #}
+
+
+
+{% block javascripts %}
+    <script src="/js/ad.js"></script>
+{% endblock %}
+
