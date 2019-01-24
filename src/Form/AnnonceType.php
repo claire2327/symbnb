@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Ad;
 use Faker\Provider\Text;
 use Symfony\Component\Form\AbstractType;
+use App\Form\ApplicationType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -14,28 +15,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class AnnonceType extends AbstractType
+class AnnonceType extends ApplicationType
 {
-    // pour éviter de répéter sans arrêt le même code, on crée une fonction :
-
-    /**
-     *
-     * Permet d'avoir la configuration de base d'un champ
-     * @param string $label
-     * @param string $placeholder
-     * @param array $options
-     * @return array
-     */
-    private function getConfiguration($label, $placeholder, $options = []) {
-        return array_merge([
-            'label' => $label,
-            'attr' => [
-                'placeholder' => $placeholder
-            ]
-        ], $options);
-    }
-    // array_merge va fusionner le tableau avec le label et le placeholder avec le tableau d'options (qui est par défaut un tableau vide car on n'a pas toujours besoin de l'appeler
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

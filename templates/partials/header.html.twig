@@ -15,9 +15,37 @@
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">         <!--ml-auto permet de le mettre à droite -->
-            <li class="nav-item">
-                <a href="#" class="nav-link">Mon compte</a>
-            </li>
+            {% if app.user %}
+                <!-- si app.user existe, ça veut dire que quelqu'un est connecté -->
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" id="accountDropdownLink" data-toggle="dropdown">
+                        <img src="{{ app.user.picture }}" class="avatar avatar-mini"
+                             alt="Avatar de {{ app.user.fullName }}"> {{ app.user.fullName }}
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="accountDropdownLink">
+                        <!-- aria-labelledby="accountDropdownLink" précise que c'est ce lien/ ce dropdown qui doit s'ouvrir quand on clique sur le href avec id accountDropdownLink -->
+                        <a href="{{ path('ads_create') }}" class="dropdown-item">Créer une annonce</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ path('account_index') }}" class="dropdown-item">Mon compte</a>
+                        <a href="{{ path('account_profile') }}" class="dropdown-item">Modifier mon profil</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ path('account_logout') }}" class="dropdown-item">Déconnexion</a>
+                    </div>
+
+
+                </li>
+
+            {% else %}
+                <li class="nav-item">
+                    <a href="{{ path('account_register') }}" class="nav-link">Inscription</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('account_login') }}" class="nav-link">Connexion</a>
+                </li>
+
+            {% endif %}
+
         </ul>
     </div>
 </nav>
@@ -25,7 +53,7 @@
 {# pour ajouter l'affichage des flashs : #}
         {% for label, messages in app.flashes %}
             {# label = clés et messages = valeur du tableau app.flashes qui regroupe tous les flashes#}
-            <div class="container">
+            <div class=" container">
                 <div class="alert alert-{{ label }}">
                     {# label correspond à danger, success, etc. Ce sont des classes bootstrap du coup #}
                     {% for message in messages %}

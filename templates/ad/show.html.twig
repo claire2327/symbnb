@@ -18,6 +18,13 @@
                 <strong>{{ ad.rooms }} chambres </strong> pour <strong>{{ ad.price }}&euro;</strong> par nuit
             </p>
             <a href="#" class="btn btn-primary">Réserver !</a>
+
+            {% if app.user and app.user == ad.author %}
+                <a href="{{ path('ads_edit', {'slug': ad.slug}) }}" class="btn btn-secondary">Modifier l'annonce</a>
+                <a href="{{ path('ads_delete', {'slug': ad.slug}) }}" class="btn btn-danger"
+                   onclick="return confirm(`Etes-vous sûr de vouloir supprimer l'annonce {{ ad.title }}?`)">Supprimer
+                    l'annonce</a>
+            {% endif %}
         </div>
     </div>
 
@@ -62,23 +69,20 @@
 
 
             <div class="col">
-                <div class="row">
-                    <div class="col-4">
-                        <img src="http://placehold.it/64x64" alt="Avatar de Joseph">
+                {% set a = ad.author %}
+                <div class="row mb-3 align-items-center">
+                    <div class="col-3">
+                        <a href="{{ path('user_show', {'slug' : a.slug}) }}">
+                            <img src="{{ a.picture }}" class="avatar avatar-medium" alt="Avatar de {{ a.fullName }}">
+                        </a>
                     </div>
                     <div class="col">
-                        <h3>Joseph Dupont</h3>
-                        <span class="badge badge-primary">3 annonces</span>
+                        <a href="{{ path('user_show', {'slug' : a.slug}) }}">
+                            <h3>{{ a.fullName }}</h3>
+                        </a>
+                        <span class="badge badge-primary">{{ a.ads | length }} annonces</span>
                     </div>
-                </div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus explicabo fugit, ipsam iusto
-                    laboriosam minus nam nisi odit repellendus veritatis.</p>
-                <p>Ab accusamus accusantium architecto, consequuntur delectus distinctio dolor ea eum excepturi facilis
-                    magnam maxime minima nobis possimus quis quod rerum.</p>
-                <p>Ab beatae doloribus earum eum facilis fugiat hic illum incidunt itaque, libero nostrum nulla
-                    pariatur,
-                    provident quia quidem reiciendis sit.</p>
-            </div>
+                </div>{{ a.description | raw }}</div>
         </div>
     </div>
 
