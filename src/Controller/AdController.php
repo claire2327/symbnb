@@ -38,7 +38,7 @@ class AdController extends AbstractController
      * Permet de créer une annonce. On ajoute isGranted pour que seuls ceux connectés puissent ajouter une annonce.
      *
      * @Route("/ads/new", name="ads_create")
-     * @IsGranted("USER_ROLE")
+     * @IsGranted("ROLE_USER")
      * @return Response
      */
     public function create(Request $request, ObjectManager $manager)
@@ -103,8 +103,6 @@ class AdController extends AbstractController
                 $image->setAd($ad);
                 $manager->persist($image);
             }
-
-
 
             $manager->persist($ad);
             $manager->flush();

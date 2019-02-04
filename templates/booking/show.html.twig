@@ -10,7 +10,7 @@
     {% set author = ad.author %}
 
     <div class="container">
-        <h1>Votre réservation n°{{ booking.id }}</h1>
+        <h1 class="my-5">Votre réservation n°{{ booking.id }}</h1>
 
         {% if app.request.query.get('withAlert') %}
             <!-- on va faire en sorte que withalert apparaisse dans l'url la première fois qu'on voit la résa -->
@@ -21,7 +21,7 @@
                     <strong><a href="{{ path('user_show', {'slug': author.slug}) }}">{{ author.fullName }}</a></strong>
                     pour l'annonce
                     <strong><a href="{{ path('ads_show', {'slug': ad.slug}) }}">{{ ad.title }}</a></strong>
-                     a bien été prise en compte.
+                    a bien été prise en compte.
                 </p>
             </div>
         {% endif %}
@@ -41,9 +41,9 @@
                         <dt class="col-md-4">Nombre de nuits</dt>
                         <dd class="col-md-8">{{ booking.duration }}</dd>
                         <dt class="col-md-4">Montant total</dt>
-                        <dd class="col-md-8">{{ booking.amount }} &euro;</dd>
+                        <dd class="col-md-8">{{ booking.amount | number_format(2, ',', ' ') }} &euro;</dd>
                         <dt class="col-md-4">Commentaire</dt>
-                        <dd class="col-md-8">{{ booking.comment }}</dd>
+                        <dd class="col-md-8">{{ booking.comment | default('Aucun commentaire') }}</dd>
                     </dl>
 
                     <hr>
@@ -65,13 +65,43 @@
                     </div>
                     {{ author.description | raw }}
 
-                    <a href="{{ path('user_show', {'slug': author.slug}) }}" class="btn btn-primary">Plus d'infos sur {{ author.firstName }}</a>
+                    <a href="{{ path('user_show', {'slug': author.slug}) }}" class="btn btn-info">Plus d'infos
+                        sur {{ author.firstName }}</a>
                 </div>
+
+                <div class="alert alert-light" id="comment">
+                    <h2 class="alert-heading">Votre avis compte !</h2>
+                    {% if date() > date(booking.endDate) %}
+
+                        {% set comment = booking.ad.commentFromAuthor(app.user) %}
+
+                        {% if comment is not null %}
+                            <blockquote>
+                                {{ comment.content }}
+                            </blockquote>
+
+                            <strong>Note
+                                : </strong> {% include 'partials/rating.html.twig' with {'rating' : comment.rating } %}
+
+                        {% else %}
+
+                            {{ form_start(form) }}
+                            {{ form_widget(form) }}
+                            <button type="submit" class="btn btn-success">Confirmer !</button>
+                            {{ form_end(form) }}
+                        {% endif %}
+
+                    {% else %}
+                        <p>Vous ne pourrez pas noter cette annonce avant la fin de votre voyage.</p>
+                    {% endif %}
+
+                </div>
+
             </div>
             <div class="col">
                 <div class="alert alert-light">
                     <h2 class="alert-heading">Votre hébergement</h2>
-                    
+
                     <h4>
                         <a href="{{ path('ads_show', {'slug': ad.slug}) }}">{{ ad.title }}</a>
                     </h4>
@@ -80,7 +110,7 @@
                     <!-- img-fluid pour qu'elle prenne 100% -->
                     {{ ad.content | raw }}
 
-                    <a href="{{ path('ads_show', {'slug' : ad.slug}) }}" class="btn btn-primary">Plus d'informations</a>
+                    <a href="{{ path('ads_show', {'slug' : ad.slug}) }}" class="btn btn-info">Plus d'informations</a>
                 </div>
 
             </div>

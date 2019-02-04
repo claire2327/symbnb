@@ -33,9 +33,11 @@ class Booking
     /**
      * @ORM\Column(type="datetime")
      * @Assert\Date(message="Attention, la date d'arrivée doit être au bon format.")
-     * @Assert\GreaterThan("today", message="La date d'arrivée doit être ultérieure à la date d'aujourd'hui !")
+     * @Assert\GreaterThan("today", message="La date d'arrivée doit être ultérieure à la date d'aujourd'hui !", groups={"front"})
      */
     private $startDate;
+    // la validation greater than ne sera valable que dans le front et pas dans le back
+
 
     /**
      * @ORM\Column(type="datetime")
@@ -60,9 +62,10 @@ class Booking
     private $comment;
 
     /**
-     * Callback appelé à chaque fois qu'on crée une résa
+     * Callback appelé à chaque fois qu'on crée une résa ou qu'on la met à jour
      *
      * @ORM\PrePersist
+     * @ORM\PreUpdate
      *
      * @return void
      */
@@ -72,6 +75,7 @@ class Booking
         }
 
         if(empty($this->amount)) {
+            // 0 est considéré comme empty
             // prix de l'annonce * nb de jours
             $this->amount = $this->ad->getPrice() * $this->getDuration();
 
