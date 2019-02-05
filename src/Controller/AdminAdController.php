@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ad;
 use App\Form\AnnonceType;
 use App\Repository\AdRepository;
+use App\Service\PaginationService;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,13 +15,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminAdController extends AbstractController
 {
     /**
-     * @Route("/admin/ads", name="admin_ads_index")
+     * @Route("/admin/ads/{page<\d+>?1}", name="admin_ads_index")
      */
-    public function index(AdRepository $repo)
+    public function index(PaginationService $pagination, $page)
     {
+        // page 1 par défaut. On ajoute des requirements pour éviter qu'un petit malin mette autre chose qu'un numéro dans la barre d'adresse pour le numéro de page. \d+ signifie digit mais pas forcément un seul.
+        // on peut aussi mettre les requirements directement dans la route comme ceci :
+        // {page<\d+>?1} Le ? précise que le nb est optionnel. Attention, bien indiquer la valeur par défaut après le ? car dans ce cas, il ne la prend plus en compte dans la fonction
+        // $ads = $repo->findBy([], [], 5, 0);
+        // va aller chercher les 5 premières annonces, sans filtre ou classement particulier
+
+        $pagination->setEntityClass(Ad::class)
+                    //->setRoute('admin_ads_index') Plus besoin car on va chercher la route dans le service avec RequestStack
+                    ->setPage($page);
+
+
         return $this->render('admin/ad/index.html.twig', [
-            'ads' => $repo->findAll()
-        ]);
+            'pagination' => $pagination
+            ]);
         // on renvoie ads qui correspond à ce que va renvoyer le repo quand on lui demande findAll
     }
 
